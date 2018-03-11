@@ -191,7 +191,9 @@ class Sample(object):
         If the property is read for the first time, this will make an
         API call.
         """
+        print("Call")
         if Sample.devices_dict.get(self.device_id) is None:
+            print("Miss")
             Sample.devices_dict[self.device_id] =  self.response.account.get_device(self.device_id)
         return Sample.devices_dict[self.device_id]
 
