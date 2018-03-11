@@ -121,8 +121,8 @@ class QueryResponse(object):
         self.json_dict = json_dict
         self.query = query
 
-        assert json_dict.get("msgType") == QueryResponse.ADVANCED_INQUIRY, """
-        Only advanced inquiry responses are supported."""
+       # assert json_dict.get("msgType") == QueryResponse.ADVANCED_INQUIRY, """
+       # Only advanced inquiry responses are supported."""
         assert account.account_id == json_dict.get("accountId"), """
         Account ID mismatch."""
 
@@ -191,9 +191,7 @@ class Sample(object):
         If the property is read for the first time, this will make an
         API call.
         """
-        print("Call")
         if Sample.devices_dict.get(self.device_id) is None:
-            print("Miss")
             Sample.devices_dict[self.device_id] =  self.response.account.get_device(self.device_id)
         return Sample.devices_dict[self.device_id]
 
