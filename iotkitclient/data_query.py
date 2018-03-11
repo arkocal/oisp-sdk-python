@@ -150,7 +150,7 @@ class QueryResponse(object):
                     value = sample_list[val_i]
                     if date_type == QueryResponse.DATATYPE_NUMBER:
                         value = float(value)
-                    timestamp = float(timestamp) #/10e3
+                    timestamp = float(timestamp)*10e3 #/10e3
                     try:
                         on = datetime.datetime.fromtimestamp(timestamp)
                     except ValueError:
