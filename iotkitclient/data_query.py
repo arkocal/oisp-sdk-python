@@ -182,6 +182,7 @@ class Sample(object):
             try:
                 on = datetime.datetime.fromtimestamp(float(on)/10e3)
             except ValueError:
+                print (on)
                 on = datetime.datetime.fromtimestamp(float(on)/10e6)
         self.on = on
         self.loc = loc
