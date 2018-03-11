@@ -192,8 +192,8 @@ class Sample(object):
         API call.
         """
         if Sample.devices_dict.get(self.device_id) is None:
-            Sample.devices_dict[self.device_d] =  self.response.account.get_device(self.device_id)
-        return Sample.devices_dict[self.device_d]
+            Sample.devices_dict[self.device_id] =  self.response.account.get_device(self.device_id)
+        return Sample.devices_dict[self.device_id]
 
     def __str__(self):
         return "{}:{}".format(self.on, self.value)
