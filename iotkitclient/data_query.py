@@ -92,7 +92,7 @@ class DataQuery(object):
                 self.from_.timetuple())*10e6)
 
         if isinstance(self.to, datetime.datetime):
-            payload_dict["to"] = int(time.mktime(self.to.timetuple())*10e6)
+            payload_dict["to"] = int(time.mktime(self.to.timetuple())*10e3)
 
         # instead of device_ids device objects can be used
         for i, dev in enumerate(payload_dict.get("device_ids", [])):
@@ -177,7 +177,7 @@ class Sample(object):
         self.component_id = component_id
         self.value = value
         if not isinstance(on, datetime.datetime):
-            on = datetime.datetime.fromtimestamp(float(on)/10e6)
+            on = datetime.datetime.fromtimestamp(float(on)/10e3)
         self.on = on
         self.loc = loc
         self._device = None
