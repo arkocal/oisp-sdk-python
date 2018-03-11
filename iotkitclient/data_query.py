@@ -151,7 +151,10 @@ class QueryResponse(object):
                     if date_type == QueryResponse.DATATYPE_NUMBER:
                         value = float(value)
                     timestamp = float(timestamp)/10e3
-                    on = datetime.datetime.fromtimestamp(timestamp)
+                    try:
+                        on = datetime.datetime.fromtimestamp(timestamp)
+                    except:
+                        on = datetime.datetime.fromtimestamp(timestamp/10e3)
                     sample = Sample(self, device_id, component_id, value, on)
                     self.samples.append(sample)
 
