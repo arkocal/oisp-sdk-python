@@ -128,8 +128,8 @@ class QueryResponse(object):
 
         # Division by 10e6, as datetime expects seconds and the service
         # provides microseconds
-        start_ts = json_dict.get("startTimestamp") / 10e6
-        end_ts = json_dict.get("endTimestamp") / 10e6
+        start_ts = json_dict.get("startTimestamp") / 10e3
+        end_ts = json_dict.get("endTimestamp") / 10e3
         self.start_time = datetime.datetime.fromtimestamp(start_ts)
         self.end_time = datetime.datetime.fromtimestamp(end_ts)
 
