@@ -154,7 +154,10 @@ class QueryResponse(object):
                     try:
                         on = datetime.datetime.fromtimestamp(timestamp)
                     except ValueError:
-                        on = datetime.datetime.fromtimestamp(timestamp/10e3)
+                        try:
+                            on = datetime.datetime.fromtimestamp(timestamp/10e3)
+                        except ValueError:
+                            on = datetime.datetime.fromtimestamp(timestamp/10e6)
                     sample = Sample(self, device_id, component_id, value, on)
                     self.samples.append(sample)
 
