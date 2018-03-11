@@ -157,7 +157,10 @@ class QueryResponse(object):
                         try:
                             on = datetime.datetime.fromtimestamp(timestamp/10e3)
                         except ValueError:
-                            on = datetime.datetime.fromtimestamp(timestamp/10e6)
+                            try:
+                                on = datetime.datetime.fromtimestamp(timestamp/10e6)
+                            except ValueError:
+                                on = datetime.datetime.fromtimestamp(timestamp/10e9)
                     sample = Sample(self, device_id, component_id, value, on)
                     self.samples.append(sample)
 
@@ -186,7 +189,7 @@ class Sample(object):
         self.value = value
         if not isinstance(on, datetime.datetime):
             try:
-                on = datetime.datetime.fromtimestamp(float(on)*10e3)
+                on = datetime.datetime.fromtimestamp(float(on))
             except ValueError:
                 print (on)
                 on = datetime.datetime.fromtimestamp(float(on)/10e3)
