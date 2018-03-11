@@ -179,7 +179,10 @@ class Sample(object):
         self.component_id = component_id
         self.value = value
         if not isinstance(on, datetime.datetime):
-            on = datetime.datetime.fromtimestamp(float(on)/10e3)
+            try:
+                on = datetime.datetime.fromtimestamp(float(on)/10e3)
+            except ValueError:
+                on = datetime.datetime.fromtimestamp(float(on)/10e6)
         self.on = on
         self.loc = loc
         self._device = None
