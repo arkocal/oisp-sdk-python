@@ -183,7 +183,7 @@ class Sample(object):
         self.value = value
         if not isinstance(on, datetime.datetime):
             try:
-                on = datetime.datetime.fromtimestamp(float(on))
+                on = datetime.datetime.fromtimestamp(float(on)*10e3)
             except ValueError:
                 print (on)
                 on = datetime.datetime.fromtimestamp(float(on)/10e3)
