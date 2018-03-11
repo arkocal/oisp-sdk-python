@@ -159,6 +159,8 @@ class QueryResponse(object):
 class Sample(object):
     """Class representing a single datapoint."""
 
+    devices_dict = {}
+
     # pylint: disable=too-many-arguments
     def __init__(self, response, device_id, component_id, value, on, loc=None):
         """Create Sample object.
@@ -189,9 +191,9 @@ class Sample(object):
         If the property is read for the first time, this will make an
         API call.
         """
-        if self._device is None:
-            self._device = self.response.account.get_device(self.device_id)
-        return self._device
+        if Sample.devices_dict.get(self.device_id) is None:
+            Sample.devices_dict[self.device_d] =  self.response.account.get_device(self.device_id)
+        return Sample.devices_dict[self.device_d]
 
     def __str__(self):
         return "{}:{}".format(self.on, self.value)
