@@ -73,7 +73,5 @@ enter-debug: .install
 	cd samples && python enter_pdb.py;
 
 define msg
-	for i in $(shell seq 1 80 ); do echo -n "-"; done; echo "" && \
-	echo -e "\t"$1 && \
-	for i in $(shell seq 1 80 ); do echo -n "-"; done; echo ""
+	echo -e "\t"$1"\n"
 endef
