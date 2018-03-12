@@ -128,8 +128,8 @@ class QueryResponse(object):
 
         # Division by 10e6, as datetime expects seconds and the service
         # provides microseconds
-        start_ts = json_dict.get("startTimestamp") / 10e3
-        end_ts = json_dict.get("endTimestamp") / 10e3
+        start_ts = json_dict.get("startTimestamp") / 1000
+        end_ts = json_dict.get("endTimestamp") / 1000
         self.start_time = datetime.datetime.fromtimestamp(start_ts)
         self.end_time = datetime.datetime.fromtimestamp(end_ts)
 
@@ -150,17 +150,10 @@ class QueryResponse(object):
                     value = sample_list[val_i]
                     if date_type == QueryResponse.DATATYPE_NUMBER:
                         value = float(value)
-                    timestamp = float(timestamp)*10e3 #/10e3
-                    try:
-                        on = datetime.datetime.fromtimestamp(timestamp)
-                    except ValueError:
-                        try:
-                            on = datetime.datetime.fromtimestamp(timestamp/10e3)
-                        except ValueError:
-                            try:
-                                on = datetime.datetime.fromtimestamp(timestamp/10e6)
-                            except ValueError:
-                                on = datetime.datetime.fromtimestamp(timestamp/10e9)
+                    timestamp = float(timestamp)
+                    on = timestamp
+#                    on = datetime.datetime.fromtimestamp(timestamp)
+
                     sample = Sample(self, device_id, component_id, value, on)
                     self.samples.append(sample)
 
@@ -188,11 +181,7 @@ class Sample(object):
         self.component_id = component_id
         self.value = value
         if not isinstance(on, datetime.datetime):
-            try:
-                on = datetime.datetime.fromtimestamp(float(on))
-            except ValueError:
-                print (on)
-                on = datetime.datetime.fromtimestamp(float(on)/10e3)
+            on = datetime.datetime.fromtimestamp(float(on)/1000)
         self.on = on
         self.loc = loc
         self._device = None

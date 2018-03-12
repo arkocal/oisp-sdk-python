@@ -245,7 +245,8 @@ class Device(object):
         was recorded.
         """
         if on is None:
-            on = int(time.time()*10e6)
+            # time returns ts in
+            on = int(time.time()*1000)
         datapoint = {"componentId": component_id,
                      "value": str(value),
                      "on": on}
@@ -264,7 +265,7 @@ class Device(object):
         current time will be used instead.
         """
         if on is None:
-            on = int(time.time()*10e6)
+            on = int(time.time()*1000)
         payload = {"on": on,
                    "accountId": self.domain_id,
                    "data": self.unsent_data}
