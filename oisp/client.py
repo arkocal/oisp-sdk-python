@@ -29,6 +29,7 @@
 import json
 import logging
 
+import cbor
 from termcolor import colored
 import requests
 
@@ -194,7 +195,8 @@ class Client(object):
         # Test connection
         self.get_server_info()
 
-    def get_headers(self, authorize_as=None, authorize=True):
+    def get_headers(self, authorize_as=None, authorize=True,
+                    content_type="application/json"):
         """Return a JSON dictionary containing request headers.
 
         Args:
@@ -205,7 +207,7 @@ class Client(object):
         If this is None (default), client will attempt user authorization.
 
         """
-        headers = {"Content-Type": "application/json"}
+        headers = {"Content-Type": content_type}
         if not authorize:
             return headers
 
@@ -376,17 +378,25 @@ class Client(object):
         url = self.base_url + endpoint
         logger.debug("%s: %s", colored(request_func.__name__.upper(), "green"),
                      url)
-        if "data" in kwargs:
-            logger.debug("%s \n%s", colored("Payload:", attrs=["bold"]),
-                         pretty_dumps(kwargs["data"]))
+        
+#        if "data" in kwargs:
+#            logger.debug("%s \n%s", colored("Payload:", attrs=["bold"]),
+#                         pretty_dumps(kwargs["data"]))
 
         if "data" in kwargs and isinstance(kwargs.get("data"), dict):
-            kwargs["data"] = json.dumps(kwargs["data"])
+            try:
+                kwargs["data"] = json.dumps(kwargs["data"])
+            # Not json serializable, try cbor
+            except TypeError:
+                headers["Content-Type"] = "application/cbor"
+                print("Sending cbor")
+                kwargs["data"] = cbor.dumps(kwargs["data"])
+                
         resp = request_func(url, headers=headers, proxies=proxies,
                             verify=verify, *args, **kwargs)
 
         self.response = resp
-
+        print("CONTENT:", resp.content)
         try:
             resp_json = resp.json()
         except ValueError:

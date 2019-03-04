@@ -33,9 +33,9 @@ PASSWORD = "P@ssw0rd"
 ROLE = "admin"
 
 
-test: lint-light reset-db
+test: reset-db #lint-light
 	@$(call msg,"Starting Integrity Tests ...")
-	virtualenv --no-site-packages venv_test;
+	virtualenv --python=/usr/bin/python3 --no-site-packages venv_test;
 	( . venv_test/bin/activate; \
 	pip install coverage; \
 	coverage run --source oisp setup.py test; \

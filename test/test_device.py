@@ -144,5 +144,7 @@ class DeviceTestCase(BaseCaseWithAccount):
         cid = resp["cid"]
 
         data = bytes([1, 2, 3, 4])
+        print(type(data))
         device.add_sample(cid, data)
+        print(device.unsent_data)
         device.submit_data()

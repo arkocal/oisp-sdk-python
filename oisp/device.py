@@ -29,6 +29,8 @@
 from datetime import datetime
 import uuid
 
+import cbor
+
 from oisp.utils import (camel_to_underscore, underscore_to_camel,
                         timestamp_in_ms)
 
@@ -252,7 +254,7 @@ class Device(object):
         if on is None:
             on = timestamp_in_ms()
         datapoint = {"componentId": component_id,
-                     "value": str(value),
+                     "value": value,
                      "on": on}
         if loc is not None:
             datapoint["loc"] = loc
@@ -272,6 +274,10 @@ class Device(object):
                    "accountId": self.domain_id,
                    "data": self.unsent_data}
 
+        # Use CBOR if there is binary data in the payload
+        use_cbor = True in [isinstance(dp["value"], bytes)
+                            for dp in self.unsent_data]
+
         # If there is an account, we can POST to device URL
         if self.auth_as is None:
             url = self.url
@@ -283,4 +289,5 @@ class Device(object):
 
         self.client.post(url, data=payload, authorize_as=self.auth_as,
                          expect=201)
+
         self.unsent_data = []
