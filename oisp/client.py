@@ -52,8 +52,6 @@ class AuthenticationError(Exception):
 
     """
 
-    pass
-
 
 class OICException(Exception):
     """Exception for cases when an error code is returned from the server."""
