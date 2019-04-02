@@ -21,6 +21,22 @@ jobs:
       - checkout
 
       - run:
+          name: Install
+          shell: /bin/bash
+          command: |
+            sudo python setup.py install
+            sudo pip install pylint pycodestyle pydocstyle
+
+      - run:
+          name: Run linters
+          shell: /bin/bash
+          command: |
+            pylint oisp --score=n || exit 1
+            pycodestyle oisp || exit 1
+            pycodestyle test || exit 1
+            pydocstyle oisp --add-ignore=D105 || exit 1
+
+      - run:
           name: Check whether most recent commit is signedoff
           shell: /bin/bash
           command: |
