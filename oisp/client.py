@@ -30,8 +30,8 @@ import json
 import logging
 
 import cbor
-from termcolor import colored
 import requests
+from termcolor import colored
 
 from oisp.account import Account
 from oisp.device import Device
