@@ -28,7 +28,7 @@
 # PROJECT_NAME is used to find the containers, this should match
 # COMPOSE_PROJECT_NAME in platform-launcher
 NAMESPACE?=oisp
-DASHBOARD_POD:=$(shell kubectl -n $(NAMESPACE) get pods -o custom-columns=:metadata.name | grep dashboard | head -n 1)
+FRONTEND_POD:=$(shell kubectl -n $(NAMESPACE) get pods -o custom-columns=:metadata.name | grep frontend | head -n 1)
 
 PROJECT_NAME ?= "oisp"
 USERNAME = "testuser"
@@ -50,16 +50,16 @@ format-files: .install-deps
 
 lint-light:
 	@$(call msg,"Running linters (light) ...");
-	pylint --disable=fixme --score=n oisp
-	pycodestyle oisp
-	pycodestyle test
+	python -m pylint --disable=fixme --score=n oisp
+	python -m pycodestyle oisp
+	python -m pycodestyle test
 
 lint:
 	@$(call msg,"Running linters (full) ...");
-	pylint oisp --score=n
-	pycodestyle oisp
-	pycodestyle test
-	pydocstyle oisp --add-ignore=D105
+	python -m pylint oisp --score=n
+	python -m pycodestyle oisp
+	python -m pycodestyle test
+	python -m pydocstyle oisp --add-ignore=D105
 
 install: .install
 
@@ -70,7 +70,7 @@ install: .install
 
 reset-db:
 	@$(call msg,"Resetting database ...");
-	kubectl -n $(NAMESPACE) exec -it $(DASHBOARD_POD) -c dashboard -- node /app/admin resetDB;
+	kubectl -n $(NAMESPACE) exec -it $(FRONTEND_POD) -c frontend -- node /app/admin resetDB;
 
 enter-debug: .install
 	cd samples && python enter_pdb.py;

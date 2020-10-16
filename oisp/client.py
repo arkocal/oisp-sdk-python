@@ -159,7 +159,7 @@ class OICException(Exception):
                 self.code = resp_json.get("code")
         except json.JSONDecodeError:
             message += "\nResponse: {}".format(resp.content)
-        super(OICException, self).__init__(message)
+        super().__init__(message)
 
 
 class Client:
@@ -329,7 +329,6 @@ class Client:
         is bound to.
         fetch_info (boolean): whether to fetch device information.
         """
-        fetch_info = fetch_info
         headers = self.get_headers(authorize=False)
         headers["Authorization"] = "Bearer " + device_token
 

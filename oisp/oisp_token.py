@@ -98,6 +98,9 @@ class UserToken:
             user_id = payload["sub"]
             expires_by = payload["exp"]
         except KeyError as exc:
+            # The implementation should be abstracted away,
+            # this is a parameter problem, not really a key error.
+            # pylint: disable=raise-missing-from
             raise ValueError("Invalid JSON format key '{}' "
                              "missing".format(exc.args[0]))
         accounts = []
