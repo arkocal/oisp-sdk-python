@@ -28,6 +28,7 @@
 import os
 import unittest
 import warnings
+import uuid
 
 from oisp import Client
 from . import config, utils
@@ -53,11 +54,12 @@ class BaseCase(unittest.TestCase):
         # Supress unclosed socket warnings from docker
         warnings.filterwarnings("ignore", category=ResourceWarning,
                                 message=".*/var/run/docker.sock.*")
-
-        utils.add_user(config.username, config.password, config.role)
+        self.username = f"random_user_{uuid.uuid4()}@example.com"
+        self.password = "password"
+        utils.add_user(self.username, self.password)
 
         self.client = Client(config.api_url)
-        self.client.auth(config.username, config.password)
+        self.client.auth(self.username, self.password)
 
     def tearDown(self):
         utils.clear_db()
@@ -70,7 +72,7 @@ class BaseCaseWithAccount(BaseCase):
         BaseCase.setUp(self)
         self.account = self.client.create_account(config.accountname)
         # Reauth to access new Account
-        self.client.auth(config.username, config.password)
+        self.client.auth(self.username, self.password)
         self.account.create_component_type(dimension="temperature",
                                            version="1.0", ctype="sensor",
                                            data_type="Number",

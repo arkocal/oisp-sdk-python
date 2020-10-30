@@ -26,13 +26,12 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # IoT Analytics server info
-api_url = "http://frontend:4001/v1/api"
+api_url = "http://localhost:4001/v1/api"
 proxies = None
 
 # user account to use
 username = "oisp@testing.com"
 password = "OispTesting1"
-role = "admin"
 
 # account data
 accountname = "testaccount"

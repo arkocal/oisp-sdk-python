@@ -158,6 +158,7 @@ class OICException(Exception):
                 message += "\nError message: {}".format(pretty)
                 self.code = resp_json.get("code")
         except json.JSONDecodeError:
+            self.code = resp.status_code
             message += "\nResponse: {}".format(resp.content)
         super().__init__(message)
 

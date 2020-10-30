@@ -43,7 +43,7 @@ class AuthTestCase(BaseCase):
 
         login_sucessful_with_wrong_password = True
         try:
-            client.auth(config.username, wrong_password)
+            client.auth(self.username, wrong_password)
         except oisp.client.OICException as e:
             self.assertEqual(e.code,
                              oisp.client.OICException.NOT_AUTHORIZED)
@@ -53,7 +53,7 @@ class AuthTestCase(BaseCase):
 
     def test_auth_success(self):
         client = oisp.Client(config.api_url, proxies=config.proxies)
-        client.auth(config.username, config.password)
+        client.auth(self.username, self.password)
 
 
 class GetCreateAccountTestCase(BaseCase):
@@ -63,6 +63,7 @@ class GetCreateAccountTestCase(BaseCase):
         self.assertEqual(accounts, [])
         account = self.client.create_account("test_account")
         # Reauth to access new Account
-        self.client.auth(config.username, config.password)
+        self.client.auth(self.username, self.password)
         accounts = self.client.get_accounts()
-        self.assertEqual(accounts, [account])
+        self.assertEqual([a.account_id for a in accounts],
+                         [account.account_id])

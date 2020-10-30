@@ -77,21 +77,17 @@ class DataTestCase(BaseCaseWithAccount):
         time.sleep(DATA_WRITE_WAIT)
         data = self.account.search_data(DataQuery())
         self.assertEqual(len(data.samples), 2)
-        # As this test was written, the platform returned strings
-        # for every data type, hence "10" and "20"
         self.assertCountEqual([s.value for s in data.samples], [10, True])
 
     def test_get_multiple_samples_from_multiple_components(self):
         self.device.add_sample(self.cid["temp"], 10)
         # TODO bad ("1") but must be fixed at frontend
-        self.device.add_sample(self.cid["bool"], True)
+        self.device.add_sample(self.cid["bool"], False)
         self.device.submit_data()
         time.sleep(DATA_WRITE_WAIT)
         data = self.account.search_data(DataQuery())
         self.assertEqual(len(data.samples), 2)
-        # As this test was written, the platform returned strings
-        # for every data type, hence "10" and "20"
-        self.assertCountEqual([s.value for s in data.samples], [10, True])
+        self.assertCountEqual([s.value for s in data.samples], [10, False])
 
     def test_get_submitted_binary_data(self):
         BINARY_PAYLOAD = bytes([1, 2, 3, 4, 5, 6])

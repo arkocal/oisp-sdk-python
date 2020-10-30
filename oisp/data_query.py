@@ -101,7 +101,8 @@ class QueryResponse:
     """Class to manage data search responses."""
 
     ADVANCED_INQUIRY = "advancedDataInquiryResponse"
-    DATATYPE_NUMBER = "number"
+    DATATYPE_NUMBER = "Number"
+    DATATYPE_BOOLEAN = "Boolean"
 
     def __init__(self, account, json_dict, query=None):
         """Create QueryResponse object.
@@ -138,14 +139,16 @@ class QueryResponse:
                 if "samples" not in component_dict.keys():
                     continue
                 component_id = component_dict["componentId"]
-                date_type = component_dict["dataType"]
+                data_type = component_dict["dataType"]
                 ts_i = component_dict["samplesHeader"].index("Timestamp")
                 val_i = component_dict["samplesHeader"].index("Value")
                 for sample_list in component_dict.get("samples", []):
                     timestamp = sample_list[ts_i]
                     value = sample_list[val_i]
-                    if date_type == QueryResponse.DATATYPE_NUMBER:
+                    if data_type == QueryResponse.DATATYPE_NUMBER:
                         value = float(value)
+                    elif data_type == QueryResponse.DATATYPE_BOOLEAN:
+                        value = (value == "1")  # Platform returns "0" or "1"
                     # datetime uses timestamps in seconds, the service in ms
                     timestamp = float(timestamp)/1e3
                     on = datetime.datetime.fromtimestamp(timestamp)

@@ -90,26 +90,22 @@ class DeviceTestCase(BaseCaseWithAccount):
 
     def test_set_props_update(self):
         device0 = self.account.create_device("device_tsft", "device_tsft")
-        d_id = device0.device_id
-        token = device0.activate()
-        device1 = self.client.get_device(token, d_id)
-        device0.add_component("temp1", "temperature.v1.0")
         test_attributes = {"test_attribute": "test_value"}
         device0.set_properties(attributes=test_attributes)
+        d_id = device0.device_id
+        token = device0.activate()
+        device0.add_component("temp1", "temperature.v1.0")
+        device1 = self.client.get_device(token, d_id)
 
-        # We also need to update device0, because it contains undetailed
-        # information otherwise, != information in updated device1
-        device0.update()
-        device1.update()
-
-        self.assertCountEqual(device0.components, device1.components)
+        self.assertCountEqual([c["cid"] for c in device0.components],
+                              [c["cid"] for c in device1.components])
         self.assertCountEqual(device1.attributes, test_attributes)
 
     def test_submit_data_with_device_token(self):
         device = self.account.create_device("device_id", "device_name")
         token = device.activate()
-        device = self.client.get_device(token, device.device_id)
         resp = device.add_component("temp1", "temperature.v1.0")
+        device = self.client.get_device(token, device.device_id)
         cid = resp["cid"]
         device.add_sample(cid, 10)
         device.submit_data()

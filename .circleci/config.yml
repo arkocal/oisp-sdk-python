@@ -48,6 +48,7 @@ commands:
               echo "Commit is not signedoff"
               exit 1
             fi
+
   lint:
     description: "Run linters for code and comments."
     steps:
@@ -55,6 +56,40 @@ commands:
           command: |
             pyenv local 3.8.5
             make lint
+
+  build-and-deploy-oisp:
+    description: "Build and deploy oisp"
+    steps:
+      - run:
+          name: Checkout OISP and build
+          shell: /bin/bash
+          command: |
+            git clone https://github.com/Open-IoT-Service-Platform/platform-launcher.git
+            cd platform-launcher
+            git checkout develop
+            git submodule init
+            git submodule update
+            yes | make update
+            bash util/setup-ubuntu18.04.sh
+            sudo dd if=/dev/zero of=/swapfile bs=1M count=8000
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            make build DOCKER_TAG=test
+            export PATH=$PATH:/snap/bin
+            make import-images DOCKER_TAG=test DEBUG=true
+            npm install nodemailer
+            export NODOCKERLOGIN=true
+            make deploy-oisp-test DOCKER_TAG=test
+            make wait-until-ready
+
+  test-sdk:
+    description: "Finally test the Python SDK"
+    steps:
+      - run:
+          name: "Run tests"
+          shell: /bin/bash
+          command: "make test"
+
 
 jobs:
   e2e-test:
@@ -64,6 +99,8 @@ jobs:
       - check-signed
       - install-sdk
       - lint
+      - build-and-deploy-oisp
+      - test-sdk
 
 workflows:
   workflow:

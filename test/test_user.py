@@ -25,8 +25,6 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import unittest
-import test.config as config
 from test.basecase import BaseCaseWithAccount
 
 
@@ -35,5 +33,4 @@ class GetCreateDeviceTestCase(BaseCaseWithAccount):
     def test_user_attributes(self):
         user = self.client.get_user()
         # E-mail adress is used as username
-        self.assertEqual(user.email, config.username)
-        self.assertEqual(user.tc_accepted, True)
+        self.assertEqual(user.email, self.username)

@@ -37,7 +37,7 @@ class User:
     # pylint: disable=too-many-arguments
     # Arguments match data provided by REST API
     def __init__(self, client, user_id, email=None, accounts=None,
-                 attributes=None, tc_accepted=None, is_verified=None):
+                 attributes=None, is_verified=None):
         """Create an User object.
 
         This method does not create a new user on host side.
@@ -52,7 +52,6 @@ class User:
         if not attributes:
             attributes = {}
         self.attributes = attributes
-        self.tc_accepted = tc_accepted
         self.is_verified = is_verified
         self.url = "/users/{}".format(self.user_id)
 
@@ -67,7 +66,6 @@ class User:
         return User(client=client, user_id=json_dict["id"],
                     email=json_dict.get("email"), accounts=accounts,
                     attributes=json_dict.get("attributes", {}),
-                    tc_accepted=json_dict.get("termsAndConditions"),
                     is_verified=json_dict.get("is_verified"))
 
     def update_attributes(self, attributes):

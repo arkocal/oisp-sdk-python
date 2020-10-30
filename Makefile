@@ -38,6 +38,7 @@ ROLE = "admin"
 
 test: lint-light reset-db
 	@$(call msg,"Starting Integrity Tests ...")
+	kubectl -n $(NAMESPACE) port-forward $(FRONTEND_POD) 4001:4001 > /dev/null 2>&1&
 	virtualenv venv_test;
 	. venv_test/bin/activate && \
 	coverage run --source oisp setup.py test && \

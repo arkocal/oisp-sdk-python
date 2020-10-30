@@ -57,7 +57,7 @@ def clear_db():
             deployment="frontend", container="frontend")
 
 
-def add_user(username, password, role):
+def add_user(username, password):
     """Add a new user.
 
     Args:
@@ -66,5 +66,8 @@ def add_user(username, password, role):
     password: password for new user
     role: user role, see OISP documentation for details.
     """
-    cmd = ["node", "/app/admin", "addUser", username, password, role]
-    _run_in(cmd=cmd, deployment="frontend", container="frontend")
+    cmd = ["node", "/app/admin", "addUser", username, password]
+    try:
+        _run_in(cmd=cmd, deployment="frontend", container="frontend")
+    except subprocess.CalledProcessError:
+        pass
